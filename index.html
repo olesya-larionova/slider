@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="slider" content="width=device-width, initial-scale=1">
+<link href="./style/style.css" type="text/css" rel="stylesheet">
+<title>slider</title>
+</head>
+<body class="body">
+    <main>
+        <section class="section">
+            <div class="wrapper section-wrapper">
+
+                <div class="section-info">
+                    <div class="section-info_left">
+                        <h2 class="title title-section">Completed<br>projects</h2>
+                        <p class="text text-section">Only a small part of the work performed by our company is presented<br>on the site. For 14 years on in the construction<br> 
+                            market we have made happy more than 1000 families</p>
+                        <div class="section-info_left_details">
+                            <div><h3 class="title subtitle-section">City:</h3>
+                            <p class="text text-section-d city">Rostov-on-Don<br>LCD admiral</p></div>
+                            <div><h3 class="title subtitle-section">Apartment area:</h3>
+                            <p class="text text-section-d area">81 m2</p></div>
+                            <div><h3 class="title subtitle-section">Repair time:</h3>
+                            <p class="text text-section-d time">3.5 months</p></div>
+                            <div><h3 class="title subtitle-section">Repair Cost:</h3>
+                            <p class="text text-section-d cost">Upon request</p></div>
+                        </div>
+                        <div class="arrows">
+                            <div class="arrow arrow-left"><img src="./images/arrow-left.svg"></div>
+                            <div class="dots"></div>                    
+                            <div class="arrow arrow-right"><img src="./images/arrow-right.svg"></div>                                    
+                        </div>
+                    </div>
+                    <div class="section-info_right">
+                        <ul class="section-nav"></ul>                        
+                        <div class="images"></div>
+                    </div>
+                    
+                </div>
+               
+           </div>
+        </section>
+    </main>
+</body>
+
+<script type="text/javascript">
+    let slidesData = [{
+    url: "./images/image_1.png",
+    title: "Rostov-on-Don, Admiral",
+    city:  "Rostov-on-Don<br>LCD admiral",
+    area:  "81 m2",
+    time: "3.5 months",
+    cost: "Upon request"
+  }, {
+    url: "./images/image_2.png",
+    title: "Sochi Thieves",
+    city:  "Sochi<br>Thieves",
+    area:  "105 m2",
+    time: "4 months",
+    cost: "Upon request"
+  }, {
+    url: "./images/image_3.png",
+    title: "Rostov-on-Don Patriotic",
+    city:  "Rostov-on-Don<br>Patriotic",
+    area:  "93 m2",
+    time: "3 months",
+    cost: "Upon request"
+  }
+
+]
+function initSlider() {
+
+    if (!slidesData || !slidesData.length) return;
+
+    
+    let sliderImages = document.querySelector(".images");
+    let sliderArrows = document.querySelector(".arrows");
+    let sliderDots = document.querySelector(".dots");
+    let sliderTitles = document.querySelector(".section-nav");
+    let cityText = document.querySelector(".city");
+    let areaText = document.querySelector(".area");
+    let timeText = document.querySelector(".time");
+    let costText = document.querySelector(".cost");
+
+    initImages();
+    initArrows();
+    initDots();
+    initTitles()
+
+    function initImages() {
+        slidesData.forEach((slide, index) => {
+            let imageDiv = `<div class="image n${index} ${index === 0? "active" : ""}" style="background-image:url(${slidesData[index].url});" data-index="${index}"></div>`;
+            sliderImages.innerHTML += imageDiv;
+        });
+    }
+
+    function initTitles() {
+        slidesData.forEach((slide, index) => {
+            let titleLi = `<li class="section-nav_item n${index} ${index === 0? "active" : ""}" data-index="${index}">${slide.title}</li>`;
+            sliderTitles.innerHTML += titleLi;
+        });
+        sliderTitles.querySelectorAll(".section-nav_item").forEach(title => {
+        title.addEventListener("click", function() {
+        moveSlider(this.dataset.index);
+    })
+    })
+    }
+
+    function initArrows() {
+        sliderArrows.querySelectorAll(".arrow").forEach(arrow => {
+            arrow.addEventListener("click", function() {
+            let curNumber = +sliderImages.querySelector(".active").dataset.index;
+            let nextNumber;
+                if (arrow.classList.contains("arrow-left")) {
+                    nextNumber = curNumber === 0? slidesData.length - 1 : curNumber - 1;
+                } else {
+                    nextNumber = curNumber === slidesData.length - 1? 0 : curNumber + 1;
+                }
+        moveSlider(nextNumber);
+        });
+        });
+    }
+
+    function initDots() {
+        slidesData.forEach((slide, index) => {
+            let dot = `<div class="dot n${index} ${index === 0? "active" : ""}" data-index="${index}"><img src="./images/dot.svg"></div>`;
+            sliderDots.innerHTML += dot;
+        });
+        sliderDots.querySelectorAll(".dot").forEach(dot => {
+        dot.addEventListener("click", function() {
+            moveSlider(this.dataset.index);
+        })
+        })
+    }
+
+    function moveSlider(num) {
+        sliderImages.querySelector(".active").classList.remove("active");
+        sliderImages.querySelector(".n" + num).classList.add("active");
+        sliderDots.querySelector(".active").classList.remove("active");
+        sliderDots.querySelector(".n" + num).classList.add("active");
+        sliderTitles.querySelector(".active").classList.remove("active");
+        sliderTitles.querySelector(".n" + num).classList.add("active");
+        cityText.innerHTML = slidesData[num].city;
+        areaText.innerHTML = slidesData[num].area;
+        timeText.innerHTML = slidesData[num].time;
+        costText.innerHTML = slidesData[num].cost;
+    }
+}
+
+
+  
+document.addEventListener("DOMContentLoaded", function() {
+  initSlider();
+});
+
+</script>
+</html>
